@@ -1,0 +1,16 @@
+version: "3"
+services:
+  logstash-source:
+    build: docker/logstash
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./logstash-source.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./certs:/certs:ro
+  logstash-destination:
+    image: docker.elastic.co/logstash/logstash-oss:7.13.4
+    expose:
+      - "12345"
+    volumes:
+      - ./logstash-destination.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./certs:/certs:ro

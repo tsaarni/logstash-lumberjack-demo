@@ -1,6 +1,8 @@
-[submodule "docker/logstash/gems/logstash-output-lumberjack-3.1.8"]
-	path = docker/logstash/gems/logstash-output-lumberjack-3.1.8
-	url = git@github.com:tsaarni/logstash-output-lumberjack.git
 [submodule "docker/logstash/gems/jls-lumberjack-0.0.26"]
 	path = docker/logstash/gems/jls-lumberjack-0.0.26
-	url = git@github.com:tsaarni/ruby-lumberjack.git
+	url = https://github.com/Nordix/ruby-lumberjack.git
+	branch = nordix
+[submodule "docker/logstash/gems/logstash-output-lumberjack-3.1.9"]
+	path = docker/logstash/gems/logstash-output-lumberjack-3.1.9
+	url = https://github.com/Nordix/logstash-output-lumberjack.git
+	branch = nordix

@@ -8,7 +8,7 @@ services:
       - ./logstash-source.conf:/usr/share/logstash/pipeline/logstash.conf:ro
       - ./certs:/certs:ro
   logstash-destination:
-    image: docker.elastic.co/logstash/logstash-oss:7.13.4
+    image: docker.elastic.co/logstash/logstash-oss:7.15.1
     expose:
       - "12345"
     volumes:

@@ -2,26 +2,42 @@
 
 > **WARNING**: This demo depends on forked versions of logstash-output-lumberjack and ruby-lumberjack. **Note that ruby-lumberjack (the lumberjack v1 protocol implementation) is deprecated, so this is not a long term solution!**
 
-This demo shows how mutual TLS authentication could be implemented with lumberjack output.
-Beats input is used as destination.
+This demo shows mutual TLS authentication with lumberjack output.
+Beats input is used as destination in this demo.
 
 ![](demo.png)
 
 
-For required code changes, see
+The upstream version of the lumberjack output plugin only supports server authentication.
+Supporting client authentication requires code changes.
+Since ruby-lumberjack (the protocol implementation) has been deprecated for many years, it is not possible to get the changes merged with upstream anymore.
+The demo uses following forked releases instead
 
-* https://github.com/logstash-plugins/logstash-output-lumberjack/compare/master...tsaarni:client-cert
-* https://github.com/elastic/ruby-lumberjack/compare/master...tsaarni:client-cert
+* https://github.com/Nordix/logstash-output-lumberjack/releases/tag/v3.1.9-nordix-1
+* https://github.com/Nordix/ruby-lumberjack/releases/tag/v0.0.26-nordix-1
 
+For the code changes included in these releases, see
+
+* https://github.com/logstash-plugins/logstash-output-lumberjack/compare/master...Nordix:nordix
+* https://github.com/elastic/ruby-lumberjack/compare/master...Nordix:nordix
 
 ## Instructions
 
 ### 1. Preparations
 
-Download `certyaml` to create certificate
+Clone the demo repository and initialize the submodules, which will download the forks
 
 ```console
-$ curl https://github.com/tsaarni/certyaml/releases/download/v0.5.0/certyaml-linux-amd64.tar.gz -o certyaml.tar.gz
+git clone https://github.com/tsaarni/logstash-lumberjack-demo.git
+cd logstash-lumberjack-demo
+git submodule update --init
+```
+
+
+Download `certyaml` to create certificates
+
+```console
+$ curl -L https://github.com/tsaarni/certyaml/releases/download/v0.5.0/certyaml-linux-amd64.tar.gz -o certyaml.tar.gz
 $ tar zxvf certyaml.tar.gz
 $ chmod +x certyaml
 ```
@@ -31,7 +47,7 @@ Generate client and server certificates
 
 ```console
 $ mkdir -p certs
-$ certyaml -d certs
+$ ./certyaml -d certs
 Loading manifest file: certs.yaml
 Reading certificate state file: certs/certs.state
 Writing: certs/client-ca.pem certs/client-ca-key.pem
@@ -43,11 +59,14 @@ Writing state: certs/certs.state
 
 ### 2. Successful authentication
 
-Start the demo and wait for the containers to spin up
+Start the demo and wait for the containers to spin up.
 
 ```console
 $ docker-compose up
 ```
+Logstash source container will be built automatically with the above-mentioned code changes.
+The destination container is standard logstash-oss container without any changes.
+The `certs` subdirectory is mounted into the containers, as well as the logstash configuration files, see [`docker-compose.yaml`](docker-compose.yaml), [logstash-source.conf](logstash-source.conf) and [logstash-destination.conf](logstash-destination.conf).
 
 Send data to the TCP input of the source logstash
 ```console

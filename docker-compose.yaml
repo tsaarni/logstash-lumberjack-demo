@@ -7,10 +7,20 @@ services:
     volumes:
       - ./logstash-source.conf:/usr/share/logstash/pipeline/logstash.conf:ro
       - ./certs:/certs:ro
-  logstash-destination:
+    depends_on:
+      - logstash-destination-alpha
+      - logstash-destination-beta
+  logstash-destination-alpha:
     image: docker.elastic.co/logstash/logstash-oss:7.15.1
     expose:
       - "12345"
     volumes:
-      - ./logstash-destination.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./logstash-destination-alpha.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./certs:/certs:ro
+  logstash-destination-beta:
+    image: docker.elastic.co/logstash/logstash-oss:7.15.1
+    expose:
+      - "12345"
+    volumes:
+      - ./logstash-destination-beta.conf:/usr/share/logstash/pipeline/logstash.conf:ro
       - ./certs:/certs:ro

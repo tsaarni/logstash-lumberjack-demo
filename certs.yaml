@@ -1,15 +1,24 @@
 subject: cn=client-ca
 key_type: RSA
 ---
-subject: cn=server-ca
+subject: cn=server-ca-1
+key_type: RSA
+---
+subject: cn=server-ca-2
 key_type: RSA
 ---
 issuer: cn=client-ca
 subject: cn=client
 key_type: RSA
 ---
-issuer: cn=server-ca
-subject: cn=server
+issuer: cn=server-ca-1
+subject: cn=server-alpha
 sans:
-- DNS:logstash-destination
+- DNS:logstash-destination-alpha
+key_type: RSA
+---
+issuer: cn=server-ca-2
+subject: cn=server-beta
+sans:
+- DNS:logstash-destination-beta
 key_type: RSA
